@@ -1,4 +1,5 @@
 let capture;
+let graphics;
 
 function setup() {
   // 建立全螢幕畫布，背景顏色為 d5bdaf
@@ -9,6 +10,9 @@ function setup() {
   capture = createCapture(VIDEO);
   capture.size(windowWidth * 0.8, windowHeight * 0.8);
   capture.hide(); // 隱藏原始攝影機畫面
+
+  // 使用 createGraphics 產生與攝影機影像相同大小的畫布
+  graphics = createGraphics(capture.width, capture.height);
 }
 
 function draw() {
@@ -17,19 +21,27 @@ function draw() {
   scale(-1, 1); // 水平翻轉畫布
   image(capture, (width - capture.width) / 2, (height - capture.height) / 2, capture.width, capture.height);
 
-  // 在攝影機影像上繪製圓形
-  for (let x = 0; x < capture.width; x += 20) {
-    for (let y = 0; y < capture.height; y += 20) {
+  // 設定 graphics 的背景顏色為黑色
+  graphics.background(0);
+
+  // 在 graphics 上繪製方框和內部的圓
+  for (let x = 0; x < graphics.width; x += 20) {
+    for (let y = 0; y < graphics.height; y += 20) {
       // 從 capture 中取得對應位置的顏色
       let col = capture.get(x, y);
-      fill(col);
-      noStroke();
-      // 計算圓的位置，將其繪製在攝影機影像上
-      let drawX = (width - capture.width) / 2 + x;
-      let drawY = (height - capture.height) / 2 + y;
-      ellipse(drawX, drawY, 15, 15); // 繪製寬高為 15 的圓形
+      graphics.fill(col);
+      graphics.noStroke();
+      // 繪製寬為 18 的方框
+      graphics.rect(x + 1, y + 1, 18, 18);
+
+      // 在方框內繪製一個黑色的圓
+      graphics.fill(0);
+      graphics.ellipse(x + 10, y + 10, 5, 5);
     }
   }
+
+  // 將 graphics 畫布顯示在攝影機影像的上方
+  image(graphics, (width - graphics.width) / 2, (height - graphics.height) / 2 - graphics.height - 10);
 }
 
 function windowResized() {
