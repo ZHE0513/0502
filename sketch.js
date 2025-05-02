@@ -17,7 +17,7 @@ function setup() {
 
 function draw() {
   // 將攝影機影像左右顛倒後顯示在視窗的中間
-  translate(width,0); // 將畫布的原點移到右上角
+  translate(width,2,height,2); // 將畫布的原點移到右上角
   scale(-1, 1); // 水平翻轉畫布
   image(capture, (width - capture.width) / 2, (height - capture.height) / 2, capture.width, capture.height);
 
